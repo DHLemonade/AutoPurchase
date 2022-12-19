@@ -13,25 +13,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from kream import driver
-from kream import kreamLogin
+from kream import kream_login, shoe_inventory_check, cloth_inventory_check
+from kreamrequests import kream_request_login, session
 
-from kreamrequests import session
-from kreamrequests import headers
+if __name__ == "__main__":
+    kream_login()
+    cloth_inventory_check()
 
-kreamLogin()
-
-session.headers.update(headers)
-allCookies = driver.get_cookies()
-
-driver.quit()
-
-for cookie in allCookies:
-    cook = {cookie['name'] : cookie['value']}
-    session.cookies.update(cook)
-
-response = session.get('https://www.kream.co.kr/my/inventory')
-soup = BeautifulSoup(response.text, 'html.parser')
-title = soup.select_one('class.my_inventory')
-print(title)
-print()
+    time.sleep(10)

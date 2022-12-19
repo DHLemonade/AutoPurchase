@@ -1,6 +1,9 @@
 import time
 import requests
 
+from kream import kream_login
+from kream import driver
+
 session = requests.session()
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
@@ -13,14 +16,21 @@ data = {
     "password": "Ldhfame0902!"
 }
 
-def kreamRequestsLogin():
+def kream_request_login():
 
-    url = "https://www.kream.co.kr/api/auth/login?request_key=bf3c5411-e906-4485-ba24-2c87b7ee4cb3"
+    #셀레니움으로 로그인 이후 쿠키를 얻어 request로 데이터 추출
 
+    kream_login()
 
-    response = session.post(url, data=data, headers=headers)
-    response.raise_for_status()
+    session.headers.update(headers)
+    allCookies = driver.get_cookies()
 
-    print(response.raise_for_status())
+    driver.quit()
 
+    for cookie in allCookies:
+        cook = {cookie['name']: cookie['value']}
+        session.cookies.update(cook)
 
+    # response = session.get('https://www.kream.co.kr/my/inventory')
+    # soup = BeautifulSoup(response.text, 'html.parser')
+    # title = soup.select_one('class.my_inventory')
